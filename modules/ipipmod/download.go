@@ -1,8 +1,7 @@
-package ipdb
+package ipdbmod
 
 import "net/url"
 
-//
 type Download struct {
 	URL *url.URL
 }

@@ -1,4 +1,4 @@
-package ipdb
+package ipdbmod
 
 import (
 	"encoding/binary"
