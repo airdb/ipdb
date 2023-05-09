@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"ipdb/bootstrap"
 	"ipdb/modules/config"
 	"log"
@@ -12,6 +13,8 @@ import (
 
 type invokeDeps struct {
 	fx.In
+
+	Rest *bootstrap.Serve
 }
 
 func main() {
@@ -33,29 +36,20 @@ func main() {
 	log.Println(config.GlobalConfig.IPIP.Path)
 	log.Println(config.GlobalConfig.IP2Location.Path)
 
-	type invokeDeps struct {
-		fx.In
-
-		Rest *bootstrap.Serve
-	}
-
+	// telemetrymod.FxOptions(),
+	// sensitivemod.FxOptions(),
 	app := fx.New(
-		// telemetrymod.FxOptions(),
 		bootstrap.FxOptions(),
-		// sensitivemod.FxOptions(),
 		fx.Invoke(func(lc fx.Lifecycle, deps invokeDeps) {
 			lc.Append(fx.Hook{
 				OnStart: func(ctx context.Context) error {
-					// go deps.Rest.Start()
 					go deps.Rest.Start()
 					log.Println("Press Ctrl+C to exit")
 					return nil
 				},
 				OnStop: func(ctx context.Context) error {
-					deps.Rest.Stop()
 					//deps.LokiWriter.Shutdown()
-					// return errors.Join(deps.Rest.Stop())
-					return nil
+					return errors.Join(deps.Rest.Stop())
 				},
 			})
 		}),

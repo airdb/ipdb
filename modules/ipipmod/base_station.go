@@ -1,4 +1,4 @@
-package ipdbmod
+package ipipmod
 
 import (
 	"os"

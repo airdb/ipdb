@@ -13,5 +13,6 @@ func NewIPdb() *ip2location.DB {
 		fmt.Print(err)
 		return nil
 	}
+
 	return db
 }
