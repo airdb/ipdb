@@ -40,11 +40,35 @@ func NewServe(deps serveDeps) *Serve {
 	return &Serve{deps: &deps, mux: mux}
 }
 
-var helpMsg = `Welcome to ipdb
-Usage:
-  GET /v1/ip2location/{ip}
+var helpMsg = `
+==== Welcome to ipdb service ====
+
+Usage: visit or curl the url directly, then you will get the ip information.
+
+IP2Location: https://www.ip2location.com/
   GET /v1/ip2location/
+  GET /v1/ip2location/{ip}
+
+IPIP: https://www.ipip.net/
+  GET /v1/ipip/
+  GET /v1/ipip/{ip}
+
+MaxMind: https://www.maxmind.com/
+  GET /v1/maxmind/
+  GET /v1/maxmind/{ip}
+
+IPPlus360: https://www.ipplus360.com/
+  GET /v1/ipplus360/
+  GET /v1/ipplus360/{ip}
+
+
+Thank you for following us!!
+https://github.com/airdb
 `
+
+func (s *Serve) Stop() error {
+	return s.server.Shutdown(context.TODO())
+}
 
 func (s *Serve) Start() error {
 	s.mux.Route("/", func(r chi.Router) {
@@ -96,12 +120,50 @@ func (s *Serve) Start() error {
 		})
 	})
 
+	s.mux.Route("/v1/maxmind/", func(r chi.Router) {
+		r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			ip, _, err := net.SplitHostPort(r.RemoteAddr)
+			if err != nil {
+				fmt.Fprintf(w, "userip: %q is not IP:port", r.RemoteAddr)
+				return
+			}
+
+			log.Println("ping", ip)
+			record, _ := s.deps.IP2LocationDB.Get_all(ip)
+			render.JSON(w, r, record)
+		})
+		r.HandleFunc("/{ip}", func(w http.ResponseWriter, r *http.Request) {
+			ip := chi.URLParam(r, "ip")
+			log.Println("ping", ip)
+			record, _ := s.deps.IP2LocationDB.Get_all(ip)
+
+			render.JSON(w, r, record)
+		})
+	})
+
+	s.mux.Route("/v1/ipplus360/", func(r chi.Router) {
+		r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			ip, _, err := net.SplitHostPort(r.RemoteAddr)
+			if err != nil {
+				fmt.Fprintf(w, "userip: %q is not IP:port", r.RemoteAddr)
+				return
+			}
+
+			log.Println("ping", ip)
+			record, _ := s.deps.IP2LocationDB.Get_all(ip)
+			render.JSON(w, r, record)
+		})
+		r.HandleFunc("/{ip}", func(w http.ResponseWriter, r *http.Request) {
+			ip := chi.URLParam(r, "ip")
+			log.Println("ping", ip)
+			record, _ := s.deps.IP2LocationDB.Get_all(ip)
+
+			render.JSON(w, r, record)
+		})
+	})
+
 	s.server = &http.Server{Addr: ":8080", Handler: s.mux}
 
 	log.Println("Starting server on port ", s.server.Addr)
 	return s.server.ListenAndServe()
-}
-
-func (s *Serve) Stop() error {
-	return s.server.Shutdown(context.TODO())
 }
