@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+  ipdb:
+    container_name: ipdb
+    restart: always
+    image: 'airdb/ipdb:latest'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080/tcp"
+    volumes:
+      - ./config.yaml:/app/ipdb/config.yaml:ro
+      - ./data/:/app/ipdb/data/:ro
