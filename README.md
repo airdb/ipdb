@@ -60,10 +60,6 @@ Thank you for following us!!
 https://github.com/airdb
 ```
 
-```bash
-
-```bash
-
 ## Reference
 
 ### IPDB Database API Document
