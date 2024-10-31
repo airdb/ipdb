@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+// IPPLUS Information refer to https://ip.plus/
 package ipplus.v1;
 
 import "google/api/annotations.proto";

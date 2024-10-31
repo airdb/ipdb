@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+// IPIP Information refer to https://www.ipip.net/
 package ipip.v1;
 
 import "google/api/annotations.proto";

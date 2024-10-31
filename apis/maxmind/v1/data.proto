@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+// MaxMind Information refer to https://www.maxmind.com/
 package maxmind.v1;
 
 import "google/api/annotations.proto";

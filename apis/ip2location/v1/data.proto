@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+// IP2Location Information refer to https://www.ip2location.com/
 package ip2location.v1;
 
 import "google/api/annotations.proto";
