@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package ipip.v1;
+
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/any.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "ipdb/gen/go/ipip/v1;ipipv1";
+option java_multiple_files = true;
+option java_outer_classname = "IpipServiceProto";
+option java_package = "com.airdb.ipdb.v1";
+
+service IpipIpdbService {
+  option (google.api.default_host) = "ipdb.airdb.com";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {description: "IP Service - client ip info"};
+
+
+  // IpipIpdbService
+  rpc GetIpdb(GetIpdbRequest) returns (GetIpdbResponse) {
+    option (google.api.http) = {
+      post: "/v1/ip/{ip=*}"
+      body: "payload"
+      response_body: "data"
+    };
+    option (google.api.method_signature) = "ip";
+  }
+}
+
+
+message GetIpdbRequest {
+  string ip = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string.min_len = 1
+  ];
+  map<string, google.protobuf.Any> payload = 2;
+}
+
+message GetIpdbResponse {
+  string ip = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string.min_len = 1
+  ];
+  map<string, google.protobuf.Any> data = 2;
+
+  string isp_domain = 3;
+  string isp_name = 4;
+  string ip_city = 5;
+  int64 cnt = 6;
+
+}

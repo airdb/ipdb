@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package maxmind.v1;
+
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/any.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "ipdb/gen/go/maxmind/v1;maxmindv1";
+option java_multiple_files = true;
+option java_outer_classname = "MaxmindServiceProto";
+option java_package = "com.airdb.ipdb.v1";
+
+service MaxmindIpdbService {
+  option (google.api.default_host) = "ipdb.airdb.com";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {description: "IP Service - client ip info"};
+
+
+  // MaxmindIpdbService
+  rpc GetMaxmind(GetMaxmindRequest) returns (GetMaxmindResponse) {
+    option (google.api.http) = {
+      post: "/v1/ip/{ip=*}"
+      body: "payload"
+      response_body: "data"
+    };
+    option (google.api.method_signature) = "ip";
+  }
+}
+
+
+message GetMaxmindRequest {
+  string ip = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string.min_len = 1
+  ];
+  map<string, google.protobuf.Any> payload = 2;
+}
+
+message GetMaxmindResponse {
+  string ip = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string.min_len = 1
+  ];
+  map<string, google.protobuf.Any> data = 2;
+
+  string isp_domain = 3;
+  string isp_name = 4;
+  string ip_city = 5;
+  int64 cnt = 6;
+
+}
